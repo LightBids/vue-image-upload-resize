@@ -6,6 +6,39 @@
 </template>
 
 <script>
+function createCanvas(img, autoRotate, manipulation) {
+  let width = img.width
+  let height = img.height
+
+  // only swap width and height if the image is rotated 90 or 270 degrees
+  // and if the browser doesn't do autorotation already
+  if (manipulation.canvas && manipulation.dimensionSwapped) {
+    width = img.height
+    height = img.width
+  }
+
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+
+  const ctx = canvas.getContext('2d')
+  // only rotate the image using canvas if browser doesn't do autorotation already
+  if (autoRotate && manipulation.canvas) {
+    ctx.translate(width / 2, height / 2)
+    ctx.rotate(manipulation.rad)
+    ctx.scale(manipulation.scaleX, manipulation.scaleY)
+    ctx.drawImage(img, -img.width / 2, -img.height / 2, img.width, img.height)
+  } else {
+    if (autoRotate && manipulation.css) {
+      canvas.style.transform = `rotate(${manipulation.deg}deg) scale(${manipulation.scaleX}, ${manipulation.scaleY})`
+    }
+
+    ctx.drawImage(img, 0, 0)
+  }
+
+  return canvas
+}
+
 /**
  * vue-ImageUploader: a to-the-point vue-component for client-side image upload with resizing of images (JPG, PNG, GIF)
  *
@@ -270,8 +303,13 @@ export default {
               if (Object.keys(that.exifData).length !== 0) {
                 that.log('ImageUploader: exif data found and extracted', 2)
               }
+            })
 
-              that.scaleImage(img, that.exifData.Orientation)
+            exifr.rotation(img).then(rotation => {
+              if (rotation) {
+                that.log('ImageUploader: exif rotation found', 2)
+              }
+              that.scaleImage(img, rotation)
             })
           }
         }
@@ -284,63 +322,10 @@ export default {
      * @param  {HTMLElement} img -  A document img element containing the uploaded file as a base764 encoded string as source
      * @param  {int} [orientation = 1] - Exif-extracted orientation code
      */
-    scaleImage(img, orientation = 1) {
+    scaleImage(img, rotation) {
       this.log('scaleImage() is called', 2)
 
-      let canvas = document.createElement('canvas')
-      canvas.width = img.width
-      canvas.height = img.height
-      const ctx = canvas.getContext('2d')
-      ctx.save()
-
-      // Good explanation of EXIF orientation is here http://www.daveperrett.com/articles/2012/07/28/exif-orientation-handling-is-a-ghetto/
-      if (this.autoRotate && orientation > 1) {
-        this.log('ImageUploader: rotating image as per EXIF orientation tag = ' + orientation)
-        const width = canvas.width
-        const styleWidth = canvas.style.width
-        const height = canvas.height
-        const styleHeight = canvas.style.height
-
-        if (orientation > 4) {
-          canvas.width = height
-          canvas.style.width = styleHeight
-          canvas.height = width
-          canvas.style.height = styleWidth
-        }
-        switch (orientation) {
-          case 2:
-            ctx.translate(width, 0)
-            ctx.scale(-1, 1)
-            break
-          case 3:
-            ctx.translate(width, height)
-            ctx.rotate(Math.PI)
-            break
-          case 4:
-            ctx.translate(0, height)
-            ctx.scale(1, -1)
-            break
-          case 5:
-            ctx.rotate(0.5 * Math.PI)
-            ctx.scale(1, -1)
-            break
-          case 6:
-            ctx.rotate(0.5 * Math.PI)
-            ctx.translate(0, -height)
-            break
-          case 7:
-            ctx.rotate(0.5 * Math.PI)
-            ctx.translate(width, -height)
-            ctx.scale(-1, 1)
-            break
-          case 8:
-            ctx.rotate(-0.5 * Math.PI)
-            ctx.translate(-width, 0)
-            break
-        }
-      }
-      ctx.drawImage(img, 0, 0)
-      ctx.restore()
+      let canvas = createCanvas(img, this.autoRotate, rotation)
 
       // Let's find the max available width for scaled image
       const ratio = canvas.width / canvas.height
