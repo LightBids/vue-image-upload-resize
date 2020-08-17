@@ -906,18 +906,21 @@ $export($export.P + $export.F * __webpack_require__("5147")(INCLUDES), 'String',
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"fd5725aa-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ImageUploader.vue?vue&type=template&id=a11ab95e&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"fd5725aa-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ImageUploader.vue?vue&type=template&id=51149f51&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('img',{directives:[{name:"show",rawName:"v-show",value:(_vm.imagePreview),expression:"imagePreview"}],staticClass:"img-preview",attrs:{"src":_vm.imagePreview,"width":"400"}}),_c('input',{class:_vm.className,attrs:{"id":_vm.id,"type":"file","accept":_vm.accept,"capture":_vm.capture},on:{"change":_vm.uploadFile}}),_vm._t("upload-label")],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/ImageUploader.vue?vue&type=template&id=a11ab95e&
+// CONCATENATED MODULE: ./src/components/ImageUploader.vue?vue&type=template&id=51149f51&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.function.name.js
 var es6_function_name = __webpack_require__("7f7f");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
 var web_dom_iterable = __webpack_require__("ac6a");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.iterator.js
+var es6_array_iterator = __webpack_require__("cadf");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.keys.js
 var es6_object_keys = __webpack_require__("456d");
@@ -942,6 +945,7 @@ var canvas_to_blob = __webpack_require__("20d0");
 var canvas_to_blob_default = /*#__PURE__*/__webpack_require__.n(canvas_to_blob);
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ImageUploader.vue?vue&type=script&lang=js&
+
 
 
 
@@ -1247,7 +1251,7 @@ function createCanvas(img, autoRotate, manipulation) {
             full_esm.parse(img, {
               translateValues: false
             }).then(function (exifData) {
-              that.exifData = exifData;
+              that.exifData = exifData || {};
 
               if (Object.keys(that.exifData).length !== 0) {
                 that.log('ImageUploader: exif data found and extracted', 2);
