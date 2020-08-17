@@ -300,7 +300,7 @@ export default {
             // this extracts exifdata if available. Returns an empty object if not
             exifr.parse(img, { translateValues: false }).then(exifData => {
               that.exifData = exifData
-              if (Object.keys(that.exifData).length !== 0) {
+              if (exifData && Object.keys(exifData).length !== 0) {
                 that.log('ImageUploader: exif data found and extracted', 2)
               }
             })
