@@ -51,7 +51,6 @@ if (typeof navigator === 'object') {
   if (ua.includes('iPad') || ua.includes('iPhone')) {
     let [match, major, minor] = ua.match(/OS (\d+)_(\d+)/) // eslint-disable-line no-unused-vars
     let version = Number(major) + Number(minor) * 0.1
-    console.log('iOS Browser', match, major, minor, version)
     // before ios 13.4, orientation is needed for canvas
     // since ios 13.4, the data passed to canvas is already rotated
     rotateCanvas = version < 13.4
@@ -59,13 +58,11 @@ if (typeof navigator === 'object') {
   }
   if (ua.includes('Chrome/')) {
     let [match, version] = ua.match(/Chrome\/(\d+)/) // eslint-disable-line no-unused-vars
-    console.log('Chrome Browser', match, version)
     if (Number(version) >= 81) {
       rotateCanvas = rotateCss = false
     }
   }
 }
-console.log('rotation?', 'rotateCanvas', rotateCanvas, 'rotateCss', rotateCss)
 /** end Taken from exifr */
 
 export default {
