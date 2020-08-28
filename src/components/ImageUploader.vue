@@ -55,10 +55,14 @@ if (typeof navigator === 'object') {
     // since ios 13.4, the data passed to canvas is already rotated
     rotateCanvas = version < 13.4
     rotateCss = false
-  }
-  if (ua.includes('Chrome/')) {
+  } else if (ua.includes('Chrome/')) {
     let [match, version] = ua.match(/Chrome\/(\d+)/) // eslint-disable-line no-unused-vars
     if (Number(version) >= 81) {
+      rotateCanvas = rotateCss = false
+    }
+  } else if (ua.includes('Firefox/')) {
+    let [match, version] = ua.match(/Firefox\/(\d+)/) // eslint-disable-line no-unused-vars
+    if (Number(version) >= 77) {
       rotateCanvas = rotateCss = false
     }
   }
@@ -286,6 +290,8 @@ export default {
           img.src = e.target.result
           img.onload = function() {
             that.log('img.onload() is triggered', 2)
+
+            img.style.imageOrientation = 'none'
 
             // this extracts exifdata if available. Returns an empty object if not
             EXIF.getData(img, function() {
