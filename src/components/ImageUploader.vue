@@ -1,6 +1,14 @@
 <template>
   <div>
-    <img v-show="imagePreview" :src="imagePreview" class="img-preview" width="400" /> <input :id="id" :class="className" type="file" @change="uploadFile" :accept="accept" :capture="capture" />
+    <img v-show="imagePreview" :src="imagePreview" class="img-preview" width="400" />
+    <input
+      :id="id"
+      :class="className"
+      type="file"
+      @change="uploadFile"
+      :accept="accept"
+      :capture="capture"
+    />
     <slot name="upload-label"></slot>
   </div>
 </template>
@@ -284,17 +292,17 @@ export default {
         const img = document.createElement('img')
         const reader = new window.FileReader()
 
-        reader.onload = function(e) {
+        reader.onload = function (e) {
           that.log('reader.onload() is triggered', 2)
 
           img.src = e.target.result
-          img.onload = function() {
+          img.onload = function () {
             that.log('img.onload() is triggered', 2)
 
             img.style.imageOrientation = 'none'
 
             // this extracts exifdata if available. Returns an empty object if not
-            EXIF.getData(img, function() {
+            EXIF.getData(img, function () {
               that.exifData = this.exifdata
               if (Object.keys(that.exifData).length === 0) {
                 that.log('ImageUploader: exif data found and extracted', 2)
