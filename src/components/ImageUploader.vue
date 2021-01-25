@@ -57,25 +57,29 @@ export var rotateCss = true
 if (typeof navigator === 'object') {
   let ua = navigator.userAgent
 
-  if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 0) {
-    rotateCanvas = rotateCss = false
-  } else if (ua.includes('iPad') || ua.includes('iPhone') || navigator.maxTouchPoints) {
-    let [match, major, minor] = ua.match(/OS (\d+)_(\d+)/) // eslint-disable-line no-unused-vars
-    let version = Number(major) + Number(minor) * 0.1
-    // before ios 13.4, orientation is needed for canvas
-    // since ios 13.4, the data passed to canvas is already rotated
-    rotateCanvas = version < 13.4
-    rotateCss = false
-  } else if (ua.includes('Chrome/')) {
-    let [match, version] = ua.match(/Chrome\/(\d+)/) // eslint-disable-line no-unused-vars
-    if (Number(version) >= 81) {
+  try {
+    if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 0) {
       rotateCanvas = rotateCss = false
+    } else if (ua.includes('iPad') || ua.includes('iPhone')) {
+      let [match, major, minor] = ua.match(/OS (\d+)_(\d+)/) // eslint-disable-line no-unused-vars
+      let version = Number(major) + Number(minor) * 0.1
+      // before ios 13.4, orientation is needed for canvas
+      // since ios 13.4, the data passed to canvas is already rotated
+      rotateCanvas = version < 13.4
+      rotateCss = false
+    } else if (ua.includes('Chrome/')) {
+      let [match, version] = ua.match(/Chrome\/(\d+)/) // eslint-disable-line no-unused-vars
+      if (Number(version) >= 81) {
+        rotateCanvas = rotateCss = false
+      }
+    } else if (ua.includes('Firefox/')) {
+      let [match, version] = ua.match(/Firefox\/(\d+)/) // eslint-disable-line no-unused-vars
+      if (Number(version) >= 77) {
+        rotateCanvas = rotateCss = false
+      }
     }
-  } else if (ua.includes('Firefox/')) {
-    let [match, version] = ua.match(/Firefox\/(\d+)/) // eslint-disable-line no-unused-vars
-    if (Number(version) >= 77) {
-      rotateCanvas = rotateCss = false
-    }
+  } catch(e) {
+    console.error(`Unable to determine platform version for canvas rotation from UserAgent: ${ua}`, e);
   }
 }
 /** end Taken from exifr */
